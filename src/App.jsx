@@ -9,7 +9,6 @@ import { useState } from "react"
 import Cart from "./components/Cart/Cart"
 function App() {
   const [cart, setCart] = useState([]) 
-
   function handleAddingtoCart(bookID){
     const bookToAdd = books.find((book)=> book.id === bookID)
     if (!bookToAdd) return 
@@ -41,17 +40,23 @@ function App() {
       .filter(item => item.quantity > 0 )
     )
   }
-  
+  function removeFromCartWholeItem(bookID){
+    setCart((prev)=>
+    prev.filter((item)=> item.id !== bookID
+  ))
+  }
+
+ 
   const CartCountValue = cart.reduce((sum, item) => sum = sum + item.quantity , 0 )
   return (
     <>
-    <Navbar cartTotal={CartCountValue}/>
+    <Navbar  cartTotal={CartCountValue}/>
      <Routes >
      <Route  path="/home" element={<Home />}></Route>
      <Route  path="/about" element={<AboutFunction />}></Route>
      <Route path="/contacts" element={<Contact />}></Route>
      <Route path="/" element={<FetchBooks onAddToCart={handleAddingtoCart}/>}></Route>
-     <Route path="/cart" element={<Cart onRemove ={removeFromCart} cart={cart}/>} ></Route>
+      <Route path="/cart" element={<Cart onRemove ={removeFromCart} cart={cart} removeFromCartWholeItem={removeFromCartWholeItem} handleAddingtoCart={handleAddingtoCart}/>} ></Route>
      </Routes>
      
     </>

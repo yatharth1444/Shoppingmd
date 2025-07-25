@@ -1,6 +1,9 @@
 import { Box, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button} from "@mui/material"
+ import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 
-function Cart({onRemove, cart = []}) {
+import { Link } from "react-router-dom"
+function Cart({onRemove, cart = [], removeFromCartWholeItem, handleAddingtoCart}) {
     const safeCart = Array.isArray(cart) ? cart : []
    const Totalprice = safeCart.reduce((sum, item) => sum = sum + item.price * item.quantity, 0 )
 
@@ -41,19 +44,43 @@ function Cart({onRemove, cart = []}) {
                                   <TableCell align="right">${item.price.toFixed(2)}</TableCell>
                                    <TableCell align="right">{(item.price * item.quantity).toFixed(2)}</TableCell>
                                    <TableCell align="center">
+                                    <Box  sx={{display: "flex", gap:2}}>
+                                        <Box sx={{gap: 0.5}}>
+                                    <Button 
+                                      variant="outlined"
+                                      color="error"
+                                      size="small"
+                                      onClick={()=> handleAddingtoCart(item.id)}
+                                      sx={{mr : 2}}
+                                     >
+                                        <AddIcon color="primary"></AddIcon>
+                                       
+                                    </Button>
                                     <Button 
                                       variant="outlined"
                                       color="error"
                                       size="small"
                                       onClick={()=> onRemove(item.id)}
                                      >
-                                       Remove one 
+                                        <RemoveIcon color="primary"></RemoveIcon>
+                                       
                                     </Button>
+                                    </Box>
+                                    <Button 
+                                      sx={{ml: 2}}
+                                      variant="outlined"
+                                      color="error"
+                                      size="small"
+                                      onClick={()=> removeFromCartWholeItem(item.id)}
+                                     >
+                                       Remove Item
+                                    </Button>
+                                    </Box>
                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
-
+                      
                     </Table>
                  </TableContainer>
                  <Typography variant="h6" align="right" sx={{mt:2}}>
@@ -62,6 +89,9 @@ function Cart({onRemove, cart = []}) {
                 </>
             )
         }
+        <Button variant="outlined" component={Link} to='/' >
+          
+           Close</Button>
 
        </Container>
     )
