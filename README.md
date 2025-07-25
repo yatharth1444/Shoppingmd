@@ -1,4 +1,3 @@
-============================================================================================================================================================================================
 Online Shoppingstore
 
 A simple web application for browsing and managing a book collection with a cart feature.
