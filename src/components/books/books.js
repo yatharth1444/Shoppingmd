@@ -29,7 +29,7 @@ export const books = [
     },
       {
         id: 5,
-        title: "the monsy book",
+        title: "the money book",
         author: "Vivek law ",
         price: 64,
         imageUrl : "https://m.media-amazon.com/images/I/71gyD1dW3wL.jpg"
