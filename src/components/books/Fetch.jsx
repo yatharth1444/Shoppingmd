@@ -1,7 +1,7 @@
-import {Container, Card, CardMedia, CardContent, Grid, Typography, Button } from '@mui/material'
+import {Container, Card, CardMedia, CardContent, Grid, Typography, Button, CardActionArea } from '@mui/material'
 import  {books} from "./books"
-function FetchBooks({onAddToCart}){
-
+function FetchBooks({onAddToCart, handleOpenDialogBox, setSelectedBookItem}){
+//  const navigate = useNavigate()
 
 
 
@@ -15,6 +15,11 @@ function FetchBooks({onAddToCart}){
                 books?.map((item)=>(
                  <Grid item xs={12} sm={6} md={4} key={item.id} >
                  <Card sx={{maxWidth:250, height:'100%', display:'flex', flexDirection:'column'}}>
+                    <CardActionArea onClick={()=>{
+                        setSelectedBookItem(item.id)
+                        handleOpenDialogBox()
+                        // navigate('/DialogBox')
+                        }}>
                     <CardMedia sx={{height:250, objectFit: 'cover'} }
                       component="img"
                       image={item.imageUrl}
@@ -30,8 +35,10 @@ function FetchBooks({onAddToCart}){
                         <Typography variant="body2" color='text.secondary'>
                             ${item.price.toFixed(2)}
                         </Typography>
-                        <Button variant='contained' color='secondary' sx={{m: 2, mt:'auto'}} onClick={()=> onAddToCart(item.id)}>Add to Cart</Button>
                     </CardContent>
+                    </CardActionArea>
+                  <Button variant='contained' color='secondary' sx={{m: 2, mt:'auto'}} onClick={()=> onAddToCart(item.id)}>Add to Cart</Button>
+
                  </Card>
                  </Grid>
                 ))
