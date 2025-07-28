@@ -1,6 +1,6 @@
 
 import React from 'react';
-import styles from './DialogBox.module.css'; // your CSS module
+import styles from './DialogBox.module.css';
 
 function DialogBox({ isDialogOpen, selectedBook, handleAddingtoCart, handleClose }) {
   React.useEffect(() => {
@@ -41,7 +41,6 @@ function DialogBox({ isDialogOpen, selectedBook, handleAddingtoCart, handleClose
             className={styles.addToCartBtn}
             onClick={() => {
               handleAddingtoCart(selectedBook.id);
-              handleClose();
             }}
           >
             Add to Cart

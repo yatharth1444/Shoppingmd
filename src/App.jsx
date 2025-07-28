@@ -8,6 +8,8 @@ import { books } from "./components/books/books"
 import { useState } from "react"
 import Cart from "./components/Cart/Cart"
 import DialogBox from "./components/DialogBox/DialogBox"
+import Login from "./components/Login/Login"
+import Register from "./components/Register/Register"
 
 function App() {
   const [cart, setCart] = useState([]) 
@@ -73,7 +75,9 @@ function App() {
      <Route  path="/about" element={<AboutFunction />}></Route>
      <Route path="/contacts" element={<Contact />}></Route>
      <Route path="/" element={<FetchBooks setSelectedBookItem={setSelectedBookItem} handleOpenDialogBox={handleOpenDialogBox} onAddToCart={handleAddingtoCart}/>}></Route>
-      <Route path="/cart" element={<Cart onRemove ={removeFromCart} cart={cart} removeFromCartWholeItem={removeFromCartWholeItem} handleAddingtoCart={handleAddingtoCart}/>} ></Route>
+     <Route path="/cart" element={<Cart onRemove ={removeFromCart} cart={cart} removeFromCartWholeItem={removeFromCartWholeItem} handleAddingtoCart={handleAddingtoCart}/>} ></Route>
+     <Route path="/login" element={<Login ></Login>}></Route>
+     <Route path="/register" element={<Register></Register>}></Route>
       {/* <Route path="/DialogBox" element={<DialogBox isDialogOpen={isDialogOpen} selectedBook={selectedBook} handleAddingtoCart={handleAddingtoCart} handleClose={handleClose}/>}></Route> */}
      </Routes>
 
