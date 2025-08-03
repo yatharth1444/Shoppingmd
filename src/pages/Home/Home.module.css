@@ -1,18 +1,62 @@
 .container {
-  padding: 4rem;
-  max-width: 900px;
-  margin: auto;
-  font-family: Arial, sans-serif;
+  max-width: 850px;
+  margin: 3rem auto;
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-h1 {
-  color: #1976d2;
-  margin-bottom: 1rem;
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: #182848;
 }
 
-p {
-  font-size: 1.1rem;
+.description {
+  font-size: 1.15rem;
+  color: #4b5672;
+  text-align: center;
   line-height: 1.6;
-  margin-bottom: 1rem;
-  color: white;
+}
+
+.features {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.featureCard {
+  flex: 1 1 28%;
+  background: #f7fafc;
+  border-radius: 10px;
+  padding: 1.8rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(24, 40, 72, 0.1);
+  transition: box-shadow 0.3s ease;
+  text-align: center;
+  cursor: default;
+}
+
+.featureCard:hover {
+  box-shadow: 0 8px 24px rgba(24, 40, 72, 0.15);
+}
+
+.featureCard h2 {
+  color: #1976d2;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+  font-size: 1.3rem;
+}
+
+.featureCard p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
 }

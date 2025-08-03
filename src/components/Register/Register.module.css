@@ -1,4 +1,4 @@
-
+/* 
 .centerContainer {
   min-height: 100vh;                
   display: flex;
@@ -86,5 +86,118 @@ input.error {
   font-weight: 700;
   border-radius: 5px;
   text-align: center;
+  margin-bottom: 1rem;
+} */
+.centerContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;  /* horizontally center */
+  align-items: center;      /* vertically center */
+  padding: 1rem;
+  background: linear-gradient(135deg, #f7fafc 0%, #e3effd 100%);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.form {
+  max-width: 400px;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: box-shadow 0.3s ease;
+}
+.form:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 1.9rem;
+  text-align: center;
+  color: #222;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+label {
+  font-weight: 600;
+  color: #444;
+  font-size: 1rem;
+}
+
+/* Inputs */
+input {
+  height: 44px;
+  padding: 0 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  background-color: #fff;
+  border-color: #0078ff;
+  box-shadow: 0 0 8px rgba(0, 120, 255, 0.3);
+}
+
+input.error {
+  border-color: #e55353;
+  background-color: #ffe6e6;
+  color: #a33a3a;
+}
+
+/* Error message */
+.errorMsg {
+  color: #e55353;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+/* Submit Button */
+.submitBtn {
+  background: linear-gradient(90deg, #4B6CB7, #182848);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(75, 108, 183, 0.4);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #182848, #4B6CB7);
+  box-shadow: 0 6px 18px rgba(24, 40, 72, 0.6);
+}
+
+.submitBtn:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Success message */
+.successMsg {
+  background-color: #38a169;
+  color: white;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  border-radius: 8px;
   margin-bottom: 1rem;
 }

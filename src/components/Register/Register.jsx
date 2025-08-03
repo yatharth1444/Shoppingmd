@@ -154,7 +154,7 @@ function RegisterForm() {
     }));
   }
 
-  function handleSubmit(event) {
+ async function handleSubmit(event) {
     event.preventDefault();
 
     const newErrors = {
@@ -175,12 +175,48 @@ function RegisterForm() {
     const isValid = Object.values(newErrors).every((msg) => msg === "");
 
     if (isValid) {
-      setSubmitted(true);
-      console.log("Registration successful with details:", formData);
+      try{
+      const response = await fetch('http://localhost:5000/api/users/register',{
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(formData)
+      })
+      const data = await response.json()
+      console.log(data);
 
-    } else {
-      setSubmitted(false);
-      console.log("Please fix errors to register");
+      if(response.ok){
+        setSubmitted(true)
+        console.log(`Registraion done for `,formData);
+        
+        console.log("registration done with ", data.token);
+        localStorage.setItem("token",data.token)
+        setFormData({name:"", email:"",password:"",confirmPassword:""})
+        setTouched({})
+        setFormErrors({})
+        
+      } else {
+           if(data.errors){
+            const backendErrors = {}
+            data.errors.forEach(({param, msg})=>{
+              backendErrors[param]= msg
+            })
+            setFormErrors((prev)=>({...prev, ...backendErrors}))
+            setSubmitted(false)
+            console.log("Backend errors", backendErrors);
+            
+           }else{
+            console.error("registration failed", data)
+           }
+    }
+      
+
+    }catch(err){
+      console.error("network error", err)
+      setSubmitted(false)
+    }}else{
+         setSubmitted(false)
+         console.log("please fix errors to register");
+         
     }
   }
 

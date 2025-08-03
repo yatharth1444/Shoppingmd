@@ -1,27 +1,23 @@
-
 import { useState } from "react";
-import styles from "./Login.module.css"; // Your CSS module or style file
+import styles from "./Login.module.css";
 
 function LoginForm() {
-  // Form state for inputs
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  // Track which fields are touched (visited) by the user
   const [touched, setTouched] = useState({});
 
-  // To show submission success message
   const [submitted, setSubmitted] = useState(false);
 
-  // Validation errors for each field
+  const [loading, setLoading] = useState(false);
+
   const [formErrors, setFormErrors] = useState({
     email: "",
     password: "",
   });
 
-  // Validation function returning error message (empty string if valid)
   function validateForm(name, value) {
     switch (name) {
       case "email":
@@ -37,7 +33,6 @@ function LoginForm() {
     }
   }
 
-  // Handle input changes and update errors in real-time
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData((prev) => ({
@@ -45,14 +40,12 @@ function LoginForm() {
       [name]: value,
     }));
 
-    // Update error messages as user types
     setFormErrors((prev) => ({
       ...prev,
       [name]: validateForm(name, value),
     }));
   }
 
-  // Handle field blur to mark the field as "touched"
   function handleBlur(event) {
     const { name } = event.target;
     setTouched((prev) => ({
@@ -61,45 +54,87 @@ function LoginForm() {
     }));
   }
 
-  // Handle form submit: validate all fields, update touched, and show success or errors
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    // Run validation for all fields
+
     const newErrors = {
       email: validateForm("email", formData.email),
       password: validateForm("password", formData.password),
     };
     setFormErrors(newErrors);
 
-    // Mark all fields as touched on submit
     setTouched({
       email: true,
       password: true,
     });
 
-    // Check if there are any errors
     const isValid = Object.values(newErrors).every((msg) => msg === "");
 
     if (isValid) {
-      setSubmitted(true);
-      console.log("Logging in with details:", formData);
-      // Put your actual login logic here
+      setLoading(true);  // <-- Start loading (disable submit button)
+      try {
+        const response = await fetch("http://localhost:5000/api/users/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }, // <-- Fixed: headers must be an object
+          body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+          setSubmitted(true);  // <-- Only called once here (avoid duplicate calls)
+
+          // Changed localStorage keys to lowercase and concise
+          localStorage.setItem("token", data.token);            
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          setFormErrors({});
+          setTouched({});
+          setFormData({
+            email: "",
+            password: "",
+          });
+        } else {
+          setSubmitted(false);
+
+          // Corrected condition: check for data.errors array, map errors properly
+          if (data.errors && Array.isArray(data.errors)) {
+            const backendErrors = {};
+            data.errors.forEach(({ param, message, msg }) => {
+              backendErrors[param] = message || msg;
+            });
+            setFormErrors((prev) => ({
+              ...prev,
+              ...backendErrors,     // <-- Spread backendErrors correctly
+            }));
+          } else {
+            console.error(data);
+          }
+        }
+      } catch (err) {
+        setSubmitted(false);
+        setFormErrors((prev) => ({
+          ...prev,
+          email: "Network or server error",  // Show error on email field as generic fallback
+        }));
+        console.error("Network error:", err);
+      } finally {
+        setLoading(false); // <-- Stop loading (re-enable submit button)
+      }
     } else {
       setSubmitted(false);
       console.log("Fix credentials to login");
     }
   }
 
-  // Helper: show error only if field was touched and has an error
   function showError(field) {
     return touched[field] && formErrors[field];
   }
 
-  // Determine if submit button should be disabled
   const hasErrors =
     Object.values(formErrors).some((msg) => msg !== "") ||
     !formData.email ||
-    !formData.password;
+    !formData.password ||
+    loading;    // <-- Disable submit when loading
 
   return (
     <div className={styles.centerContainer}>
@@ -112,9 +147,18 @@ function LoginForm() {
       >
         <h2>Login</h2>
 
+        {/* Improved error display for invalid credentials - case-insensitive check */}
+        {!submitted &&
+          (formErrors.email === "Invalid credentials" ||
+           formErrors.email === "invalid credentials") && (
+            <div className={styles.errorMsg} role="alert">
+              Invalid credentials!
+            </div>
+          )}
+
         {submitted && (
           <div role="alert" className={styles.successMsg}>
-            Login successful! (Simulation)
+            Login successful!
           </div>
         )}
 
@@ -163,9 +207,9 @@ function LoginForm() {
         <button
           type="submit"
           className={styles.submitBtn}
-          disabled={hasErrors}
+          disabled={hasErrors}   // <-- Button disabled when errors or loading
         >
-          Login
+          {loading ? "Logging in..." : "Login"} {/* Optional loading text */}
         </button>
       </form>
     </div>
