@@ -28,26 +28,59 @@ function App() {
      const book = books.find((item)=> item.id === bookID)
      setSelectedBook(book || null)
   }
-  function handleAddingtoCart(bookID){
-    const bookToAdd = books.find((book)=> book.id === bookID)
-    if (!bookToAdd) return 
-    
-    setCart((prev)=>{
-      const existingItem = prev.find((item)=> item.id === bookID)
-      if(existingItem){
-        return prev.map((item) => 
-        item.id === bookID
-        ?{...item, quantity: item.quantity + 1 }
-        :item
-      )
-       
-      }
-      else{
-        return [...prev, {...bookToAdd, quantity: 1}] 
-
-      }
+ async function handleAddingtoCart(bookID, quantity= 1){
+    const token = localStorage.getItem('token')
+    if(!token){
+      alert ('Please Login to Add to Cart')
+      return 
     }
-    )
+    try {
+      const response = await fetch('http://localhost:5000/api/cart/addItemToCart',{
+      method: "POST",
+      headers: {
+        "content-type" : "application/json",
+         Authorization : `Bearer ${token}`     
+      },
+      body: JSON.stringify({book: bookID, quantity }),
+    })
+    const data = await response.json()
+    if(response.ok){
+        setCart(data.cart.items.map((item)=>({
+          id: item.book._id,
+          title: item.book.title,
+          author: item.book.author,
+          price: item.book.price,
+          description: item.book.description,
+          imageUrl : item.book.image,
+          quantity: item.quantity,
+        })))
+    }else{
+      alert(data.msg || 'Failed to add item to cart')
+    }
+    } catch (error) {
+      console.error('add to cart failed: ', error);
+      alert('network error please try again')
+      
+    } 
+    // const bookToAdd = books.find((book)=> book.id === bookID)
+    // if (!bookToAdd) return 
+    
+    // setCart((prev)=>{
+    //   const existingItem = prev.find((item)=> item.id === bookID)
+    //   if(existingItem){
+    //     return prev.map((item) => 
+    //     item.id === bookID
+    //     ?{...item, quantity: item.quantity + 1 }
+    //     :item
+    //   )
+       
+    //   }
+    //   else{
+    //     return [...prev, {...bookToAdd, quantity: 1}] 
+
+    //   }
+    // }
+    // )
   }
   function removeFromCart (bookID){
       setCart((prev)=>
