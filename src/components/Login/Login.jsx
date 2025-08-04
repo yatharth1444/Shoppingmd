@@ -69,7 +69,8 @@ function LoginForm() {
     });
 
     const isValid = Object.values(newErrors).every((msg) => msg === "");
-
+    console.log(formData);
+    
     if (isValid) {
       setLoading(true);  // <-- Start loading (disable submit button)
       try {
@@ -82,8 +83,8 @@ function LoginForm() {
 
         if (response.ok) {
           setSubmitted(true);  // <-- Only called once here (avoid duplicate calls)
-
-          // Changed localStorage keys to lowercase and concise
+      
+          
           localStorage.setItem("token", data.token);            
           localStorage.setItem("user", JSON.stringify(data.user));
 

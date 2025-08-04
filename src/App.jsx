@@ -4,8 +4,7 @@ import Home from "./pages/Home/Home"
 import AboutFunction from "./pages/About/about"
 import Contact from "./pages/Contact/Contact"
 import Navbar from "./components/NavBar/Navbar"
-import { books } from "./components/books/books"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Cart from "./components/Cart/Cart"
 import DialogBox from "./components/DialogBox/DialogBox"
 import Login from "./components/Login/Login"
@@ -15,7 +14,21 @@ function App() {
   const [cart, setCart] = useState([]) 
   const [isDialogOpen, setIsDialogopen] = useState(false)
   const [selectedBook, setSelectedBook] = useState(null);
-  // const navigate = useNavigate()
+  const [books, setBooks] = useState([])
+     useEffect(()=>{
+         const fetchBooks = async() =>{
+        try {
+            const response = await fetch('http://localhost:5000/api/forBooks/Allbooks')
+           
+            const data = await response.json()
+            console.log("Fetched Data", data);
+            
+            setBooks(data.data)
+        } catch (error) {
+            console.error(`Failed to fetch books`, error)
+        }}
+        fetchBooks()
+     },[])
   function handleClose(){
     setIsDialogopen(false)
     setSelectedBook(null)
@@ -25,11 +38,13 @@ function App() {
       setIsDialogopen(true)
   }
   function setSelectedBookItem(bookID){
-     const book = books.find((item)=> item.id === bookID)
+     const book = books.find((item)=> item._id === bookID)
      setSelectedBook(book || null)
   }
  async function handleAddingtoCart(bookID, quantity= 1){
     const token = localStorage.getItem('token')
+    
+    
     if(!token){
       alert ('Please Login to Add to Cart')
       return 
@@ -46,7 +61,7 @@ function App() {
     const data = await response.json()
     if(response.ok){
         setCart(data.cart.items.map((item)=>({
-          id: item.book._id,
+          _id: item.book._id,
           title: item.book.title,
           author: item.book.author,
           price: item.book.price,
@@ -61,7 +76,9 @@ function App() {
       console.error('add to cart failed: ', error);
       alert('network error please try again')
       
-    } 
+    }
+    console.log(cart);
+    
     // const bookToAdd = books.find((book)=> book.id === bookID)
     // if (!bookToAdd) return 
     
@@ -107,7 +124,7 @@ function App() {
      <Route  path="/home" element={<Home />}></Route>
      <Route  path="/about" element={<AboutFunction />}></Route>
      <Route path="/contacts" element={<Contact />}></Route>
-     <Route path="/" element={<FetchBooks setSelectedBookItem={setSelectedBookItem} handleOpenDialogBox={handleOpenDialogBox} onAddToCart={handleAddingtoCart}/>}></Route>
+     <Route path="/" element={<FetchBooks  books={books} setSelectedBookItem={setSelectedBookItem} handleOpenDialogBox={handleOpenDialogBox} onAddToCart={handleAddingtoCart}/>}></Route>
      <Route path="/cart" element={<Cart onRemove ={removeFromCart} cart={cart} removeFromCartWholeItem={removeFromCartWholeItem} handleAddingtoCart={handleAddingtoCart}/>} ></Route>
      <Route path="/login" element={<Login ></Login>}></Route>
      <Route path="/register" element={<Register></Register>}></Route>

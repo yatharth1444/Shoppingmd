@@ -25,7 +25,7 @@ function DialogBox({ isDialogOpen, selectedBook, handleAddingtoCart, handleClose
 
         <div className={styles.dialogBody}>
           <img
-            src={selectedBook.imageUrl}
+            src={selectedBook.image}
             alt={selectedBook.title}
             className={styles.bookImage}
           />
@@ -40,7 +40,7 @@ function DialogBox({ isDialogOpen, selectedBook, handleAddingtoCart, handleClose
           <button
             className={styles.addToCartBtn}
             onClick={() => {
-              handleAddingtoCart(selectedBook.id);
+              handleAddingtoCart(selectedBook._id);
             }}
           >
             Add to Cart

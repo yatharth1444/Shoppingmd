@@ -43,6 +43,7 @@
 //     },
 
 // ]
+/* 
 export const books = [
   {
     id: "64d1fa7b9e1234567890a101",
@@ -89,3 +90,7 @@ export const books = [
       "https://static01.nyt.com/images/2022/01/17/books/19BOOKLEONARD1/19BOOKLEONARD1-superJumbo.png",
   },
 ];
+*/
+
+
+//this was mock data created while building the frontend 
