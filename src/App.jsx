@@ -61,7 +61,7 @@ function App() {
     const data = await response.json()
     if(response.ok){
         setCart(data.cart.items.map((item)=>({
-          _id: item.book._id,
+          id: item.book._id,
           title: item.book.title,
           author: item.book.author,
           price: item.book.price,
@@ -78,42 +78,84 @@ function App() {
       
     }
     console.log(cart);
-    
-    // const bookToAdd = books.find((book)=> book.id === bookID)
-    // if (!bookToAdd) return 
-    
-    // setCart((prev)=>{
-    //   const existingItem = prev.find((item)=> item.id === bookID)
-    //   if(existingItem){
-    //     return prev.map((item) => 
-    //     item.id === bookID
-    //     ?{...item, quantity: item.quantity + 1 }
-    //     :item
-    //   )
-       
-    //   }
-    //   else{
-    //     return [...prev, {...bookToAdd, quantity: 1}] 
+  
+  }
+  async function removeFromCartWholeItem (bookID, quantity = 1 ){
+      const token = localStorage.getItem('token')
+      if(!token){
+        alert(`Please login to remove items from Cart `)
+        return
+      }
+     try {
+        const response = await fetch('http://localhost:5000/api/cart/removeAtOnce', {
+          method : "POST",
+          headers: {
+              "content-type": "application/Json",
+              Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({book: bookID, quantity})
+         
+        })
+        const data = await response.json()
+        
+        if(response.ok){
+       setCart(data.cart.items.map(item => ({
+          id: item.book._id,  
+          title: item.book.title,
+          author: item.book.author,
+          price: item.book.price,
+          description: item.book.description,
+          imageUrl: item.book.image,
+          quantity: item.quantity,
+         })));
+           
+        }else{
+          alert(data.msg || "failed to remove item from cart")
+        }
+     } catch (error) {
+         console.error(" remove from cart failed ",error);
+         alert(`Network error please try again`)
+          
+     }
 
-    //   }
-    // }
-    // )
+  
   }
-  function removeFromCart (bookID){
-      setCart((prev)=>
-      prev
-      .map(item => item.id === bookID ?
-        {...item, quantity : item.quantity - 1}
-        :item 
-      )
-      .filter(item => item.quantity > 0 )
-    )
+  async function removeFromCart(bookID) {
+  const token = localStorage.getItem('token')
+  if(!token){
+    alert(`Please login to remove items from Cart `)
+    return
   }
-  function removeFromCartWholeItem(bookID){
-    setCart((prev)=>
-    prev.filter((item)=> item.id !== bookID
-  ))
+  try {
+    const response = await fetch('http://localhost:5000/api/cart/removeItem', {
+      method : "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({book: bookID, quantity: 1}) 
+    });
+    const data = await response.json();
+
+    if(response.ok){
+      setCart(data.cart.items.map(item => ({
+        id: item.book._id,
+        title: item.book.title,
+        author: item.book.author,
+        price: item.book.price,
+        description: item.book.description,
+        imageUrl: item.book.image,
+        quantity: item.quantity,
+      })));
+    } else {
+      alert(data.msg || "Failed to remove item from cart");
+    }
+  } catch (error) {
+    console.error("Remove from cart failed", error);
+    alert("Network error, please try again");
   }
+}
+
 
  
   const CartCountValue = cart.reduce((sum, item) => sum = sum + item.quantity , 0 )
